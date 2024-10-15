@@ -10,23 +10,23 @@ function TaskList() {
   const [tasks, setTasks] = useState([]); 
   const [newTask, setNewTask] = useState({ title: '', description: '', due_date: '' });
   const [editableTask, setEditableTask] = useState(null);
-
+  const backendURL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
   async function getTasks() {
-    const result = await axios.get('http://localhost:5000/api/tasks');
+    const result = await axios.get(`${backendURL}/api/tasks`);
     setTasks(result.data);
   }
   async function addTask(e) {
     e.preventDefault();
-    const result = await axios.post('http://localhost:5000/api/tasks', newTask);
+    const result = await axios.post(`${backendURL}/api/tasks`, newTask);
     setTasks((prevTasks) => [...prevTasks, result.data]);
     setNewTask({ title: '', description: '', due_date: '' });
   }
   async function deleteTask(id) {
-    await axios.delete(`http://localhost:5000/api/tasks/${id}`);
+    await axios.delete(`${backendURL}/api/tasks/${id}`);
     setTasks(tasks.filter((task) => task.id !== id));
   }
   async function updateTask(id) {
-    const result = await axios.put(`http://localhost:5000/api/tasks/${id}`, editableTask);
+    const result = await axios.put(`${backendURL}/api/tasks/${id}`, editableTask);
     setTasks((prevTasks) => prevTasks.map((task) => task.id === id ? result.data : task));
     setEditableTask(null);
   }
